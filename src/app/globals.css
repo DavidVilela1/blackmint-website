@@ -1,0 +1,656 @@
+@import 'tailwindcss';
+
+/* ──────────────────────────────────────────────────────────────────────────
+   BLACKMINT DESIGN TOKENS
+   Single source of truth for colour, type, motion and texture.
+   See docs/BRAND_GUIDELINES.md. Never hard-code colours in components.
+   ────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Palette — refined against the supplied logo artwork */
+  --color-obsidian: #090a09;
+  --color-charcoal: #151615;
+  --color-ash: #1f201e;
+  --color-smoke: #2b2c29;
+  --color-grey: #777873; /* decorative lines / large text only */
+  --color-muted: #9a9b95; /* accessible secondary text on dark */
+  --color-bone: #e8e3d8; /* warm off-white */
+  --color-paper: #ded8cb; /* paper sections */
+  --color-ink: #2d2e2a; /* secondary text on paper */
+  --color-mint: #5fdea3; /* brand mint */
+  --color-mint-bright: #7ff0bb;
+  --color-mint-ink: #146a46; /* accessible mint for text on paper */
+
+  /* Type families are injected by next/font in the root layout */
+  --font-display: var(--font-anton), 'Arial Narrow', 'Helvetica Neue', sans-serif;
+  --font-hand: var(--font-hand-script), 'Comic Sans MS', cursive;
+  --font-body: var(--font-archivo), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Motion */
+  --ease-brush: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-snap: cubic-bezier(0.7, 0, 0.2, 1);
+
+  --breakpoint-xs: 26rem;
+  --breakpoint-3xl: 112rem;
+}
+
+:root {
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --header-h: 4.5rem;
+  color-scheme: dark;
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    background-color: var(--color-obsidian);
+    color: var(--color-bone);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+  }
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-obsidian);
+    min-height: 100svh;
+    overflow-x: clip;
+    font-feature-settings: 'ss01';
+  }
+
+  ::selection {
+    background: var(--color-mint);
+    color: var(--color-obsidian);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-mint);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  [data-surface='paper'] :focus-visible {
+    outline-color: var(--color-mint-ink);
+  }
+
+  a {
+    text-underline-offset: 0.2em;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  dialog {
+    color: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ── Components ───────────────────────────────────────────────────────── */
+@layer components {
+  .container-bm {
+    width: 100%;
+    max-width: 96rem;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* Oversized condensed display type with a dry-brush distress mask */
+  .display {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.88;
+    letter-spacing: 0.005em;
+    font-weight: 400;
+  }
+
+  .distress {
+    -webkit-mask-image: url('/textures/distress-mask.webp');
+    mask-image: url('/textures/distress-mask.webp');
+    -webkit-mask-size: 44rem auto;
+    mask-size: 44rem auto;
+    -webkit-mask-repeat: repeat;
+    mask-repeat: repeat;
+  }
+
+  .hand {
+    font-family: var(--font-hand);
+    letter-spacing: 0.02em;
+  }
+
+  /* Mono "dev-log" label: // 01 — STUDIO */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.2;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.75em;
+    max-width: 100%;
+    line-height: 1.5;
+  }
+  .eyebrow::before {
+    content: '//';
+    color: var(--color-mint);
+    letter-spacing: 0;
+  }
+  [data-surface='paper'] .eyebrow {
+    color: var(--color-ink);
+  }
+  [data-surface='paper'] .eyebrow::before {
+    color: var(--color-mint-ink);
+  }
+
+  /* Primary CTA — a dry-brush mint swatch, not a pill */
+  .btn-brush {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 3.5rem;
+    padding: 0.9rem 2.1rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-obsidian);
+    text-decoration: none;
+    cursor: pointer;
+    border: 0;
+    background: transparent;
+  }
+  .btn-brush::before {
+    content: '';
+    position: absolute;
+    inset: -0.35rem -0.6rem;
+    z-index: -1;
+    background: var(--color-mint);
+    -webkit-mask: url('/textures/brush-mask.webp') center / 100% 100% no-repeat;
+    mask: url('/textures/brush-mask.webp') center / 100% 100% no-repeat;
+    /* transform only → animated on the compositor, the mask is never re-painted */
+    transition: transform 0.45s var(--ease-brush);
+    transform-origin: left center;
+    will-change: transform;
+  }
+  .btn-brush:hover::before,
+  .btn-brush:focus-visible::before {
+    background: var(--color-mint-bright);
+    transform: scaleX(1.04) skewX(-3deg);
+  }
+  .btn-brush:active::before {
+    transform: scale(0.98);
+  }
+  .btn-brush[disabled],
+  .btn-brush[aria-disabled='true'] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+  .btn-brush--bone::before {
+    background: var(--color-bone);
+  }
+  .btn-brush--ink {
+    color: var(--color-bone);
+  }
+  .btn-brush--ink::before {
+    background: var(--color-obsidian);
+  }
+  .btn-brush--ink:hover::before {
+    background: var(--color-charcoal);
+  }
+
+  /* Secondary CTA — text with a hand-drawn underline that redraws on hover */
+  .link-scribble {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-block: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: inherit;
+    text-decoration: none;
+  }
+  .link-scribble svg.scribble {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.05rem;
+    width: 100%;
+    height: 0.6rem;
+    overflow: visible;
+    color: var(--color-mint);
+  }
+  .link-scribble svg.scribble path {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.6s var(--ease-brush);
+  }
+  .link-scribble:hover svg.scribble path,
+  .link-scribble:focus-visible svg.scribble path {
+    animation: scribble-redraw 0.7s var(--ease-brush);
+  }
+  [data-surface='paper'] .link-scribble svg.scribble {
+    color: var(--color-mint-ink);
+  }
+
+  /* Inline text links inside prose */
+  .text-link {
+    color: var(--color-bone);
+    text-decoration: underline;
+    text-decoration-color: var(--color-mint);
+    text-decoration-thickness: 2px;
+    transition: color 0.2s;
+  }
+  .text-link:hover {
+    color: var(--color-mint);
+  }
+  [data-surface='paper'] .text-link {
+    color: var(--color-obsidian);
+    text-decoration-color: var(--color-mint-ink);
+  }
+  [data-surface='paper'] .text-link:hover {
+    color: var(--color-mint-ink);
+  }
+
+  /* Hand-drawn-feeling hairline */
+  .rule {
+    height: 1px;
+    border: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--color-bone) 22%, transparent) 8%,
+      color-mix(in srgb, var(--color-bone) 14%, transparent) 60%,
+      transparent
+    );
+  }
+
+  /* Honest labels for placeholder / sample content */
+  .badge-placeholder {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.6rem 0.25rem;
+    border: 1px dashed color-mix(in srgb, var(--color-mint) 70%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-mint);
+    white-space: nowrap;
+  }
+  [data-surface='paper'] .badge-placeholder {
+    color: var(--color-mint-ink);
+    border-color: var(--color-mint-ink);
+  }
+
+  /* Placeholder values inside legal drafts */
+  mark.legal-placeholder {
+    background: color-mix(in srgb, var(--color-mint) 16%, transparent);
+    color: var(--color-mint);
+    padding: 0 0.25em;
+    border-bottom: 1px dashed var(--color-mint);
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+  }
+
+  /* Long-form text */
+  .prose-bm {
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: color-mix(in srgb, var(--color-bone) 88%, transparent);
+    max-width: 44rem;
+  }
+  .prose-bm > * + * {
+    margin-top: 1.25em;
+  }
+  .prose-bm h2 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: clamp(1.75rem, 3vw, 2.4rem);
+    line-height: 1;
+    color: var(--color-bone);
+    margin-top: 2.2em;
+  }
+  .prose-bm ul {
+    list-style: none;
+    padding: 0;
+  }
+  .prose-bm li {
+    position: relative;
+    padding-left: 1.75rem;
+  }
+  .prose-bm li + li {
+    margin-top: 0.6em;
+  }
+  .prose-bm li::before {
+    content: '✕';
+    position: absolute;
+    left: 0.1rem;
+    top: 0.05em;
+    color: var(--color-mint);
+    font-size: 0.8em;
+  }
+  .prose-bm blockquote {
+    font-family: var(--font-hand);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    line-height: 1.25;
+    color: var(--color-mint);
+    border-left: 2px solid var(--color-mint);
+    padding-left: 1.25rem;
+    margin-block: 2em;
+  }
+
+  /* Form fields */
+  .field-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .field {
+    width: 100%;
+    background: transparent;
+    color: var(--color-bone);
+    border: 0;
+    border-bottom: 1.5px solid color-mix(in srgb, var(--color-bone) 35%, transparent);
+    padding: 0.85rem 0.1rem;
+    font-size: 1.0625rem;
+    border-radius: 0;
+    transition: border-color 0.2s;
+  }
+  .field:hover {
+    border-color: color-mix(in srgb, var(--color-bone) 60%, transparent);
+  }
+  .field:focus-visible {
+    outline: none;
+    border-color: var(--color-mint);
+    box-shadow: 0 1.5px 0 0 var(--color-mint);
+  }
+  .field[aria-invalid='true'] {
+    border-color: #ff8f7a;
+  }
+  .field-error {
+    color: #ffb2a3;
+    font-size: 0.9rem;
+  }
+  select.field {
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--color-mint) 50%),
+      linear-gradient(135deg, var(--color-mint) 50%, transparent 50%);
+    background-position:
+      calc(100% - 14px) 55%,
+      calc(100% - 8px) 55%;
+    background-size: 6px 6px;
+    background-repeat: no-repeat;
+  }
+  select.field option {
+    background: var(--color-charcoal);
+    color: var(--color-bone);
+  }
+
+  /* Word-mask used by headline reveals */
+  .word-mask {
+    display: inline-block;
+    max-width: 100%;
+    overflow-x: visible;
+    overflow-y: clip;
+    overflow-clip-margin: 0.1em;
+    vertical-align: top;
+    padding-bottom: 0.06em;
+    margin-bottom: -0.06em;
+  }
+  .word-mask > span {
+    display: inline-block;
+  }
+  /* Distress on animated headlines is applied per word: each moving word
+     carries its own mask, so nothing has to be re-masked while it moves. */
+  .distress:has(.word-mask) {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .distress .word-mask > span {
+    -webkit-mask-image: url('/textures/distress-mask.webp');
+    mask-image: url('/textures/distress-mask.webp');
+    -webkit-mask-size: 44rem auto;
+    mask-size: 44rem auto;
+    -webkit-mask-repeat: repeat;
+    mask-repeat: repeat;
+  }
+}
+
+/* ── Global grain overlay ──────────────────────────────────────────────
+   Static alpha texture with NORMAL blending on its own compositor layer.
+   (A blend mode here would force the whole page to be re-composited and
+   re-rasterised on every scroll frame.) */
+.grain-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background-image: url('/textures/grain.webp');
+  background-size: 256px 256px;
+  transform: translateZ(0);
+  contain: strict;
+}
+
+/* ── Motion: initial states only apply when the motion bootstrap ran ──── */
+/* html.motion is set by an inline script when JS runs and the visitor has
+   not asked for reduced motion; a failsafe removes it if GSAP never boots. */
+html.motion [data-reveal='up'],
+html.motion [data-reveal='fade'] {
+  opacity: 0;
+}
+html.motion [data-reveal='up'] {
+  transform: translate3d(0, 2rem, 0);
+}
+html.motion [data-reveal-words] .word-mask > span {
+  transform: translate3d(0, 105%, 0);
+}
+html.motion [data-reveal-stagger] > * {
+  opacity: 0;
+  transform: translate3d(0, 1.5rem, 0);
+}
+html.motion [data-reveal='clip']:not([data-revealed]) {
+  opacity: 1;
+  clip-path: inset(0 0 100% 0);
+}
+
+@keyframes scribble-redraw {
+  from {
+    stroke-dashoffset: 300;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes scroll-cue {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+.scroll-cue-line {
+  animation: scroll-cue 2.4s var(--ease-snap) 1.2s 3 both;
+}
+
+/* Visually hidden but available to assistive tech */
+.sr-only-focusable:not(:focus):not(:focus-within) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+}
+
+@media print {
+  .grain-overlay,
+  header[data-site-header],
+  [data-consent-banner] {
+    display: none !important;
+  }
+  html.motion [data-reveal],
+  html.motion [data-reveal-words] .word-mask > span {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}
+
+/* ── Hero entrance (CSS-only so it starts at first paint) ─────────────── */
+@keyframes hero-rise {
+  from {
+    transform: translate3d(0, 105%, 0) rotate(2deg);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes hero-settle {
+  from {
+    transform: scale(1.12) translate3d(0, 3%, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes hero-unshade {
+  from {
+    opacity: 0.65;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.25rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes hero-wipe {
+  from {
+    clip-path: inset(-20% 100% -40% 0);
+  }
+  to {
+    clip-path: inset(-20% -10% -40% 0);
+  }
+}
+html.motion .hero-word > span {
+  animation: hero-rise 1.1s var(--ease-brush) backwards;
+  animation-delay: calc(0.2s + var(--i, 0) * 0.09s);
+}
+html.motion .hero-shade {
+  animation: hero-unshade 2.2s var(--ease-brush) backwards;
+}
+html.motion .hero-layer {
+  animation: hero-settle 2.4s var(--ease-brush) backwards;
+  animation-delay: var(--d, 0s);
+}
+html.motion .hero-fade {
+  animation: hero-fade-up 1s var(--ease-brush) backwards;
+  animation-delay: var(--d, 0.6s);
+}
+html.motion .hero-annotation {
+  animation: hero-wipe 1.2s var(--ease-snap) 0.75s backwards;
+}
+
+/* Server-rendered consent banner: visible pre-hydration only when no decision exists */
+[data-consent-banner][data-ssr] {
+  display: none;
+}
+html.bm-no-consent [data-consent-banner][data-ssr] {
+  display: block;
+}
+
+/* ── On-load entrances (Reveal start="load") — CSS-only, first paint ─── */
+@keyframes load-clip {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0% 0);
+  }
+}
+html.motion [data-load='words'] .word-mask > span {
+  animation: hero-rise 1s var(--ease-brush) backwards;
+  animation-delay: calc(var(--d, 0s) + 0.1s);
+}
+html.motion [data-load='words'] .word-mask:nth-of-type(2) > span {
+  animation-delay: calc(var(--d, 0s) + 0.17s);
+}
+html.motion [data-load='words'] .word-mask:nth-of-type(3) > span {
+  animation-delay: calc(var(--d, 0s) + 0.24s);
+}
+html.motion [data-load='words'] .word-mask:nth-of-type(4) > span {
+  animation-delay: calc(var(--d, 0s) + 0.31s);
+}
+html.motion [data-load='words'] .word-mask:nth-of-type(5) > span {
+  animation-delay: calc(var(--d, 0s) + 0.38s);
+}
+html.motion [data-load='words'] .word-mask:nth-of-type(6) > span {
+  animation-delay: calc(var(--d, 0s) + 0.45s);
+}
+html.motion [data-load='words'] .word-mask:nth-of-type(n + 7) > span {
+  animation-delay: calc(var(--d, 0s) + 0.52s);
+}
+html.motion [data-load='up'],
+html.motion [data-load='stagger'] {
+  animation: hero-fade-up 0.9s var(--ease-brush) backwards;
+  animation-delay: calc(var(--d, 0s) + 0.15s);
+}
+html.motion [data-load='fade'] {
+  animation: hero-fade-up 0.8s ease backwards;
+  animation-delay: var(--d, 0s);
+}
+html.motion [data-load='clip'] {
+  animation: load-clip 1.2s var(--ease-snap) backwards;
+  animation-delay: calc(var(--d, 0s) + 0.2s);
+}
+
+/* Studio statement "ink-in": only words that change state are repainted */
+[data-ink='on'] [data-w] {
+  transition: color 0.35s ease;
+}
+[data-ink='on'] [data-w]:not([data-lit]) {
+  color: rgb(232 227 216 / 0.42);
+}

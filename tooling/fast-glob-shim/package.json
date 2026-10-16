@@ -1,0 +1,8 @@
+{
+  "name": "fast-glob",
+  "version": "3.3.1-blackmint-shim",
+  "description": "Minimal fast-glob replacement for @next/eslint-plugin-next (only globSync/sync is used). Removes the vulnerable micromatch → braces chain (GHSA-vfj7-8cjw-p6xm). See docs/QA_REPORT.md.",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true
+}
